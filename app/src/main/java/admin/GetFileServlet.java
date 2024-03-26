@@ -25,6 +25,7 @@ import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.utilities.IOUtilities;
 import ro.polak.http.utilities.StringUtilities;
+import util.SdcardUtil;
 
 /**
  * Servlet user to retrieve a static file.
@@ -37,8 +38,9 @@ public class GetFileServlet extends HttpServlet {
 
     @Override
     public void init() {
-        externalStorageDirectory = ((Activity) getServletContext()
-                .getAttribute("android.content.Context")).getFilesDir();
+//        externalStorageDirectory = ((Activity) getServletContext()
+//                .getAttribute("android.content.Context")).getFilesDir();
+        externalStorageDirectory = SdcardUtil.getSDPath();
     }
 
     /**

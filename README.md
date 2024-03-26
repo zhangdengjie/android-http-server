@@ -167,7 +167,7 @@ import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpServlet;
 
-public class HelloWorld extends HttpServlet {
+  public class HelloWorld extends HttpServlet {
 
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) {
@@ -278,7 +278,7 @@ Currently there are two resource providers implemented
 
 * File system resources [FileSystemResourceProvider](../../tree/master/http/src/main/java/ro/polak/http/resource/provider/FileSystemResourceProvider.java)
 * Android APK resources [AssetResourceProvider](../../tree/master/base/src/main/java/ro/polak/webserver/base/AssetResourceProvider.java)
- 
+
 ### Sample dummy implementation of a ResourceProvider
 
 ```java

@@ -8,6 +8,7 @@
 package admin;
 
 import android.app.Activity;
+import android.os.Environment;
 
 import java.io.File;
 import java.util.StringTokenizer;
@@ -22,6 +23,7 @@ import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.utilities.FileUtilities;
 import ro.polak.http.utilities.StringUtilities;
+import util.SdcardUtil;
 
 /**
  * Drive access servlet.
@@ -36,8 +38,9 @@ public class DriveAccessServlet extends HttpServlet {
 
     @Override
     public void init() {
-        externalStorageDirectory = ((Activity) getServletContext()
-                .getAttribute("android.content.Context")).getFilesDir();
+//        externalStorageDirectory = ((Activity) getServletContext()
+//                .getAttribute("android.content.Context")).getFilesDir();
+        externalStorageDirectory = SdcardUtil.getSDPath();
     }
 
     /**

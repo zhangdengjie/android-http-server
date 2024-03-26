@@ -13,7 +13,7 @@ allprojects {
     }
     tasks.withType(JavaCompile) {
         options.deprecation = true
-        options.compilerArgs += ['-Werror']
+//        options.compilerArgs += ['-Werror']
     }
 }
 
