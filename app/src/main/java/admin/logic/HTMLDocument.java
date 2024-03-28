@@ -20,6 +20,7 @@ public final class HTMLDocument {
     private StringBuilder headers;
     private boolean isAuthenticated;
     private String ownerClass = "";
+    private boolean showTab;
 
     public HTMLDocument(final String title) {
         this.title = title;
@@ -43,6 +44,11 @@ public final class HTMLDocument {
 
     public void writeln(final String w) {
         write(w + "\n");
+    }
+
+
+    public void setShowTab(boolean showTab) {
+        this.showTab = showTab;
     }
 
     /**
@@ -89,44 +95,45 @@ public final class HTMLDocument {
         out.append("</head>\n");
         out.append("<body>\n");
 
-        LinkedHashMap<String, String> menuElements = new LinkedHashMap<>();
+        if (showTab) {
+            LinkedHashMap<String, String> menuElements = new LinkedHashMap<>();
 
-        menuElements.put("Index", "About");
-        menuElements.put("DriveAccess", "Drive Access");
-        menuElements.put("ServerStats", "Statistics");
-        menuElements.put("SmsInbox", "SMS inbox");
-        menuElements.put("Logout", "Logout");
+            menuElements.put("Index", "About");
+            menuElements.put("DriveAccess", "Drive Access");
+            menuElements.put("ServerStats", "Statistics");
+            menuElements.put("SmsInbox", "SMS inbox");
+            menuElements.put("Logout", "Logout");
 
+            if (isAuthenticated) {
+                out.append("<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n");
+                out.append("<div class=\"container\">\n");
+                out.append("    <div class=\"navbar-header\">\n");
+                out.append("        <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" "
+                        + "data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n");
+                out.append("            <span class=\"sr-only\">Toggle navigation</span>\n");
+                out.append("            <span class=\"icon-bar\"></span>\n");
+                out.append("            <span class=\"icon-bar\"></span>\n");
+                out.append("            <span class=\"icon-bar\"></span>\n");
+                out.append("        </button>\n");
+                out.append("        <a class=\"navbar-brand\" href=\"/admin/Index\">Server</a>\n");
+                out.append("    </div>\n");
+                out.append("    <div id=\"navbar\" class=\"collapse navbar-collapse\">\n");
+                out.append("        <ul class=\"nav navbar-nav\">\n");
 
-        if (isAuthenticated) {
-            out.append("<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n");
-            out.append("<div class=\"container\">\n");
-            out.append("    <div class=\"navbar-header\">\n");
-            out.append("        <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" "
-                    + "data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n");
-            out.append("            <span class=\"sr-only\">Toggle navigation</span>\n");
-            out.append("            <span class=\"icon-bar\"></span>\n");
-            out.append("            <span class=\"icon-bar\"></span>\n");
-            out.append("            <span class=\"icon-bar\"></span>\n");
-            out.append("        </button>\n");
-            out.append("        <a class=\"navbar-brand\" href=\"/admin/Index\">Server</a>\n");
-            out.append("    </div>\n");
-            out.append("    <div id=\"navbar\" class=\"collapse navbar-collapse\">\n");
-            out.append("        <ul class=\"nav navbar-nav\">\n");
+                for (Map.Entry<String, String> entry : menuElements.entrySet()) {
+                    out.append("            <li");
 
-            for (Map.Entry<String, String> entry : menuElements.entrySet()) {
-                out.append("            <li");
-
-                if (ownerClass.equals(entry.getKey())) {
-                    out.append(" class=\"active\"");
+                    if (ownerClass.equals(entry.getKey())) {
+                        out.append(" class=\"active\"");
+                    }
+                    out.append("><a href=\"/admin/" + entry.getKey() + "\">" + entry.getValue() + "</a></li>\n");
                 }
-                out.append("><a href=\"/admin/" + entry.getKey() + "\">" + entry.getValue() + "</a></li>\n");
-            }
 
-            out.append("        </ul>\n");
-            out.append("    </div><!--/.nav-collapse -->\n");
-            out.append("</div>\n");
-            out.append("</nav>\n");
+                out.append("        </ul>\n");
+                out.append("    </div><!--/.nav-collapse -->\n");
+                out.append("</div>\n");
+                out.append("</nav>\n");
+            }
         }
 
         out.append("<div class=\"container theme-showcase\" role=\"main\">\n\n");

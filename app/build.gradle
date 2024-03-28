@@ -23,13 +23,6 @@ android {
         versionCode 1
         versionName "1.0"
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-        }
-    }
-    productFlavors {
-    }
 
     signingConfigs {
         debug {
@@ -46,6 +39,15 @@ android {
             keyPassword "123456"
         }
     }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
+    productFlavors {
+    }
 }
 
 dependencies {
@@ -54,4 +56,6 @@ dependencies {
     implementation project(path: ':http')
     implementation project(path: ':cli')
     implementation project(path: ':base')
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    implementation 'commons-io:commons-io:2.10.0'
 }

@@ -16,6 +16,7 @@ import admin.GetFileServlet;
 import admin.IndexServlet;
 import admin.LoginServlet;
 import admin.LogoutServlet;
+import admin.OpenTxtFileServlet;
 import admin.ServerStatsServlet;
 import admin.filter.LogoutFilter;
 import admin.filter.SecurityFilter;
@@ -75,6 +76,10 @@ public class AndroidServerConfigFactory extends BaseAndroidServerConfigFactory {
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/GetFile$"))
                         .withServletClass(GetFileServlet.class)
+                    .end()
+                    .addServlet()
+                    .withUrlPattern(Pattern.compile("^/OpenTxtFile$"))
+                    .withServletClass(OpenTxtFileServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/Index$"))

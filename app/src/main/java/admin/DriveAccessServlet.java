@@ -10,7 +10,11 @@ package admin;
 import android.app.Activity;
 import android.os.Environment;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import admin.logic.FileIconMapper;
@@ -95,25 +99,41 @@ public class DriveAccessServlet extends HttpServlet {
             if (files.length == 0) {
                 doc.writeln("<div class=\"alert alert-info\" role=\"alert\">There are no files in this directory.</div>");
             } else {
-                for (File file : files) {
+                for (int i = files.length - 1; i >= 0; i--) {
+                    File file = files[i];
+                    String fileName = file.getName();
                     if (file.isDirectory()) {
                         directories
                                 .append("<p class=\"filemanager\"><img src=\"/assets/img/folder.png\""
                                         + " alt=\"folder\" /> <a href=\"/admin/DriveAccess?"
                                         + StringUtilities.urlEncode(path
-                                        + file.getName() + "/")
+                                        + fileName + "/")
                                         + "\">"
-                                        + file.getName() + "</a></p>");
+                                        + fileName + "</a></p>");
                     } else {
-                        filesString.append("<p class=\"filemanager\"><img src=\"/assets/img/"
-                                + MAPPER.getIconRelativePath(FileUtilities.getExtension(file.getName()))
-                                + "\" alt=\"file\" /> <a href=\"/admin/GetFile?"
-                                + StringUtilities.urlEncode(path + file.getName())
-                                + "\">"
-                                + file.getName()
-                                + "</a> "
-                                + FileUtilities.fileSizeUnits(file.length())
-                                + "</p>");
+                        // TODO: 2024/3/28 zhangdengjie 这里点击事件需要读取文本内容,然后渲染到浏览器中
+                        if (fileName.endsWith("txt")) {
+                            filesString.append("<p class=\"filemanager\"><img src=\"/assets/img/"
+                                    + MAPPER.getIconRelativePath(FileUtilities.getExtension(fileName))
+                                    + "\" alt=\"file\" /> <a href=\"/admin/OpenTxtFile?"
+                                    + StringUtilities.urlEncode(path + fileName)
+                                    + "\" target=\"_blank\">"
+                                    + fileName
+                                    + "</a> "
+                                    + FileUtilities.fileSizeUnits(file.length())
+                                    + "</p>");
+                        } else {
+                            filesString.append("<p class=\"filemanager\"><img src=\"/assets/img/"
+                                    + MAPPER.getIconRelativePath(FileUtilities.getExtension(fileName))
+                                    + "\" alt=\"file\" /> <a href=\"/admin/GetFile?"
+                                    + StringUtilities.urlEncode(path + fileName)
+                                    + "\">"
+                                    + fileName
+                                    + "</a> "
+                                    + FileUtilities.fileSizeUnits(file.length())
+                                    + "</p>");
+                        }
+
                     }
                 }
             }
