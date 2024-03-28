@@ -30,6 +30,22 @@ android {
     }
     productFlavors {
     }
+
+    signingConfigs {
+        debug {
+            storeFile file("$rootDir/SignedKey")
+            storePassword "123456"
+            keyAlias "key"
+            keyPassword "123456"
+        }
+
+        release {
+            storeFile file("$rootDir/SignedKey")
+            storePassword "123456"
+            keyAlias "key"
+            keyPassword "123456"
+        }
+    }
 }
 
 dependencies {
