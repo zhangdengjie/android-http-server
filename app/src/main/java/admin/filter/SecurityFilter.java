@@ -45,12 +45,13 @@ public class SecurityFilter implements Filter {
     public void doFilter(final HttpServletRequest request, final HttpServletResponse response,
                          final FilterChain filterChain) throws IOException, ServletException {
 
-        AccessControl accessControl = new AccessControl(serverConfig, request.getSession());
-        if (!accessControl.isLogged()) {
-            String url = filterConfig.getServletContext().getContextPath() + getLoginUri(request);
-            response.sendRedirect(url);
-            return;
-        }
+        // TODO: 2024/3/30 可配置 无需登录即可使用
+//        AccessControl accessControl = new AccessControl(serverConfig, request.getSession());
+//        if (!accessControl.isLogged()) {
+//            String url = filterConfig.getServletContext().getContextPath() + getLoginUri(request);
+//            response.sendRedirect(url);
+//            return;
+//        }
 
         filterChain.doFilter(request, response);
     }
