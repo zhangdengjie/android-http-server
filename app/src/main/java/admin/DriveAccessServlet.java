@@ -9,11 +9,16 @@ package admin;
 
 import android.app.Activity;
 import android.os.Environment;
+import android.util.Log;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -33,6 +38,8 @@ import util.SdcardUtil;
  * Drive access servlet.
  */
 public class DriveAccessServlet extends HttpServlet {
+
+    private static final String TAG = "DriveAccessServlet";
 
     private static final String ADMIN_DRIVE_ACCESS_ENABLED = "admin.driveAccess.enabled";
 
@@ -99,8 +106,21 @@ public class DriveAccessServlet extends HttpServlet {
             if (files.length == 0) {
                 doc.writeln("<div class=\"alert alert-info\" role=\"alert\">There are no files in this directory.</div>");
             } else {
-                for (int i = files.length - 1; i >= 0; i--) {
-                    File file = files[i];
+                List<File> fileList = new ArrayList<>();
+                for (File file : files) {
+                    fileList.add(file);
+                }
+                fileList.sort(new Comparator<File>() {
+                    @Override
+                    public int compare(File o1, File o2) {
+                        long l = o1.lastModified() - o2.lastModified();
+                        if (l > 0) return -1;
+                        else if (l == 0) return 0;
+                        else return 1;
+                    }
+                });
+                for (File file : fileList) {
+                    Log.i(TAG, "compare: " + file.getName() + " " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(file.lastModified())));
                     String fileName = file.getName();
                     if (file.isDirectory()) {
                         directories
@@ -111,7 +131,6 @@ public class DriveAccessServlet extends HttpServlet {
                                         + "\">"
                                         + fileName + "</a></p>");
                     } else {
-                        // TODO: 2024/3/28 zhangdengjie 这里点击事件需要读取文本内容,然后渲染到浏览器中
                         if (fileName.endsWith("txt")) {
                             filesString.append("<p class=\"filemanager\"><img src=\"/assets/img/"
                                     + MAPPER.getIconRelativePath(FileUtilities.getExtension(fileName))
