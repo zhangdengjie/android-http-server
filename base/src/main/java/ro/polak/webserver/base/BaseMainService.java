@@ -10,16 +10,22 @@ package ro.polak.webserver.base;
 import static ro.polak.http.configuration.impl.ServerConfigImpl.PROPERTIES_FILE_NAME;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.media.AudioAttributes;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -240,13 +246,26 @@ public abstract class BaseMainService extends Service implements ServerGui {
 
 
     private void setNotification(final Notification notification) {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(NOTIFICATION_ID, notification);
+        PowerManager powerManager = (PowerManager) activity.getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock lock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, activity.getClass().getSimpleName());
+        lock.acquire(2000);
+        lock.release();
+
+        android.app.NotificationManager notifiManager = (android.app.NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // NotificationManager.IMPORTANCE_MAX 最高支持 声音和悬浮
+            NotificationChannel channel = new NotificationChannel("webserver", "HTTP服务", android.app.NotificationManager.IMPORTANCE_HIGH);
+            if (notifiManager.getNotificationChannel("webserver") == null) {
+                notifiManager.createNotificationChannel(channel);
+            }
+        }
+        notifiManager.notify(NOTIFICATION_ID, notification);
     }
 
     @SuppressWarnings("deprecation")
     private Notification.Builder getNotificationBuilder(final PendingIntent pIntent, final String text, final int icon) {
         return new Notification.Builder(this)
+                .setChannelId("webserver")
                 .setContentTitle("HTTPServer")
                 .setContentText(text)
                 .setSmallIcon(icon)

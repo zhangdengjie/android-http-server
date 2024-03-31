@@ -120,7 +120,6 @@ public class DriveAccessServlet extends HttpServlet {
                     }
                 });
                 for (File file : fileList) {
-                    Log.i(TAG, "compare: " + file.getName() + " " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(file.lastModified())));
                     String fileName = file.getName();
                     if (file.isDirectory()) {
                         directories
